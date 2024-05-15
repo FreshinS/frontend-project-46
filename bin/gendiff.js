@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import { Command } from 'commander';
 import * as path from 'node:path';
-import { parseData } from '../src/index.js';
+import { parseData, genDiff } from '../src/index.js';
 
 const program = new Command();
 
@@ -17,8 +17,7 @@ program
 
     const data1 = parseData(absPath1);
     const data2 = parseData(absPath2);
-    console.log(data1);
-    console.log(data2);
+    genDiff(data1, data2);
   });
 
 program.parse();
