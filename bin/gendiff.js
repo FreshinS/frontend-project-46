@@ -14,10 +14,9 @@ program
   .action((filepath1, filepath2) => {
     const absPath1 = path.resolve(filepath1);
     const absPath2 = path.resolve(filepath2);
-
     const data1 = parseData(absPath1);
     const data2 = parseData(absPath2);
-    genDiff(data1, data2);
+    console.log(genDiff(data1, data2));
   });
 
 program.parse();
