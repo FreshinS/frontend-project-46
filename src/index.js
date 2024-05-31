@@ -4,19 +4,20 @@ export const parseData = (path) => JSON.parse(fs.readFileSync(path, 'utf-8'));
 
 const mergeKeys = (result, obj1, obj2, key) => {
   const newResult = { ...result };
-  if (Object.hasOwn(obj1, key) && Object.hasOwn(obj2, key)) {
-    if (obj1[key] === obj2[key]) {
-      newResult[key] = obj1[key];
-    } else {
-      newResult[key] = [obj1[key], obj2[key]];
-    }
-  } else if (Object.hasOwn(obj1, key)) {
+  const hasKeyInObj1 = Object.hasOwn(obj1, key);
+  const hasKeyInObj2 = Object.hasOwn(obj2, key);
+
+  if (hasKeyInObj1 && hasKeyInObj2) {
+    newResult[key] = obj1[key] === obj2[key] ? obj1[key] : [obj1[key], obj2[key]];
+  } else if (hasKeyInObj1) {
     newResult[key] = obj1[key];
-  } else if (Object.hasOwn(obj2, key)) {
+  } else if (hasKeyInObj2) {
     newResult[key] = obj2[key];
   }
+  
   return newResult;
 };
+
 
 export const mergeObjects = (obj1, obj2) => {
   let result = {};
