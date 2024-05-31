@@ -9,10 +9,8 @@ const mergeKeys = (result, obj1, obj2, key) => {
 
   if (hasKeyInObj1 && hasKeyInObj2) {
     newResult[key] = obj1[key] === obj2[key] ? obj1[key] : [obj1[key], obj2[key]];
-  } else if (hasKeyInObj1) {
-    newResult[key] = obj1[key];
-  } else if (hasKeyInObj2) {
-    newResult[key] = obj2[key];
+  } else {
+    newResult[key] = hasKeyInObj1 ? obj1[key] : obj2[key];
   }
 
   return newResult;
