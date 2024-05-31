@@ -2,15 +2,18 @@ import * as fs from 'node:fs';
 
 export const parseData = (path) => JSON.parse(fs.readFileSync(path, 'utf-8'));
 
+const comp1 = (obj1, obj2, key) => (obj1[key] === obj2[key] ? obj1[key] : [obj1[key], obj2[key]]);
+const comp2 = (hasKeyInObj1, obj1, obj2, key) => (hasKeyInObj1 ? obj1[key] : obj2[key]);
+
 const mergeKeys = (result, obj1, obj2, key) => {
   const newResult = { ...result };
   const hasKeyInObj1 = Object.hasOwn(obj1, key);
   const hasKeyInObj2 = Object.hasOwn(obj2, key);
 
   if (hasKeyInObj1 && hasKeyInObj2) {
-    newResult[key] = obj1[key] === obj2[key] ? obj1[key] : [obj1[key], obj2[key]];
+    newResult[key] = comp1(obj1, obj2, key);
   } else {
-    newResult[key] = hasKeyInObj1 ? obj1[key] : obj2[key];
+    newResult[key] = comp2(hasKeyInObj1, obj1, obj2, key);
   }
 
   return newResult;
