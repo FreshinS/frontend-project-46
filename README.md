@@ -1,2 +1,1 @@
-### Hexlet tests and linter status:
-[![Actions Status](https://github.com/FreshinS/frontend-project-46/actions/workflows/hexlet-check.yml/badge.svg)](https://github.com/FreshinS/frontend-project-46/actions)
+[![CI](https://github.com/FreshinS/frontend-project-46/actions/workflows/main.yml/badge.svg)](https://github.com/FreshinS/frontend-project-46/actions/workflows/main.yml) [![Actions Status](https://github.com/FreshinS/frontend-project-46/actions/workflows/hexlet-check.yml/badge.svg)](https://github.com/FreshinS/frontend-project-46/actions)
