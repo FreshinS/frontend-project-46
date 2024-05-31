@@ -1,7 +1,9 @@
-import { parseData, mergeObjects, genDiff } from '../src/index.js';
+// @ts-check
+
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { parseData, mergeObjects, genDiff } from '../src/index.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -9,8 +11,9 @@ const __dirname = path.dirname(__filename);
 describe('JSON comparison functions', () => {
   const filePath1 = path.resolve(__dirname, '../__fixtures__/file1.json');
   const filePath2 = path.resolve(__dirname, '../__fixtures__/file2.json');
-  
-  let data1, data2;
+
+  let data1; let
+    data2;
 
   beforeAll(() => {
     data1 = JSON.parse(fs.readFileSync(filePath1, 'utf-8'));
@@ -24,11 +27,11 @@ describe('JSON comparison functions', () => {
 
   test('mergeObjects', () => {
     const expectedMergeResult = {
-      "host": "hexlet.io",
-      "timeout": [50, 20],
-      "proxy": "123.234.53.22",
-      "verbose": true,
-      "follow": false
+      host: 'hexlet.io',
+      timeout: [50, 20],
+      proxy: '123.234.53.22',
+      verbose: true,
+      follow: false,
     };
     expect(mergeObjects(data1, data2)).toEqual(expectedMergeResult);
   });
