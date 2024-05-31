@@ -2,42 +2,33 @@ import * as fs from 'node:fs';
 
 export const parseData = (path) => JSON.parse(fs.readFileSync(path, 'utf-8'));
 
-const addKeyToResult = (result, key, value) => {
-  if (Array.isArray(result[key])) {
-    result[key].push(value);
-  } else if (result[key] !== undefined) {
-    result[key] = [result[key], value];
-  } else {
-    result[key] = value;
-  }
-};
-
 const mergeKeys = (result, obj1, obj2, key) => {
+  const newResult = { ...result };
   if (Object.hasOwn(obj1, key) && Object.hasOwn(obj2, key)) {
     if (obj1[key] === obj2[key]) {
-      result[key] = obj1[key];
+      newResult[key] = obj1[key];
     } else {
-      result[key] = [obj1[key], obj2[key]];
+      newResult[key] = [obj1[key], obj2[key]];
     }
   } else if (Object.hasOwn(obj1, key)) {
-    result[key] = obj1[key];
+    newResult[key] = obj1[key];
   } else if (Object.hasOwn(obj2, key)) {
-    result[key] = obj2[key];
+    newResult[key] = obj2[key];
   }
+  return newResult;
 };
 
 export const mergeObjects = (obj1, obj2) => {
-  const result = {};
-  
+  let result = {};
+
   const keys = new Set([...Object.keys(obj1), ...Object.keys(obj2)]);
-  
-  keys.forEach(key => {
-    mergeKeys(result, obj1, obj2, key);
+
+  keys.forEach((key) => {
+    result = mergeKeys(result, obj1, obj2, key);
   });
 
   return result;
 };
-
 
 export const genDiff = (data1, data2) => {
   const mergedData = mergeObjects(data1, data2);
