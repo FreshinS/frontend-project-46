@@ -14,10 +14,9 @@ const mergeKeys = (result, obj1, obj2, key) => {
   } else if (hasKeyInObj2) {
     newResult[key] = obj2[key];
   }
-  
+
   return newResult;
 };
-
 
 export const mergeObjects = (obj1, obj2) => {
   let result = {};
