@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 import { Command } from 'commander';
 import * as path from 'node:path';
-import { parseData, genDiff } from '../src/index.js';
+import { genDiff } from '../src/index.js';
+import { parseData } from '../src/parsers.js';
 
 const program = new Command();
 

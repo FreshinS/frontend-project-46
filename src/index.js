@@ -1,17 +1,3 @@
-import * as fs from 'node:fs';
-
-export const checkExt = (path) => {
-  if (path.endsWith('.json')) return 'json';
-  if (path.endsWith('.yaml')) return 'yaml';
-  if (path.endsWith('.yml')) return 'yaml';
-}
-
-export const parseData = (path) => {
-  return JSON.parse(fs.readFileSync(path, 'utf-8'));
-};
-
-
-
 const comp1 = (obj1, obj2, key) => (obj1[key] === obj2[key] ? obj1[key] : [obj1[key], obj2[key]]);
 const comp2 = (hasKeyInObj1, obj1, obj2, key) => (hasKeyInObj1 ? obj1[key] : obj2[key]);
 
@@ -33,6 +19,7 @@ export const mergeObjects = (obj1, obj2) => {
   let result = {};
 
   const keys = new Set([...Object.keys(obj1), ...Object.keys(obj2)]);
+  console.log(keys);
 
   keys.forEach((key) => {
     result = mergeKeys(result, obj1, obj2, key);
