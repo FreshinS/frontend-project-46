@@ -4,14 +4,18 @@
   "description": "[![Actions Status](https://github.com/FreshinS/frontend-project-46/actions/workflows/hexlet-check.yml/badge.svg)](https://github.com/FreshinS/frontend-project-46/actions)",
   "main": "bin/gendiff.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "npx jest"
   },
-  "author": "",
+  "simple-git-hooks": {
+    "pre-push": "make lint"
+  },
+  "author": "Gromov Ilya",
   "license": "ISC",
   "type": "module",
   "bin": {
     "gendiff": "bin/gendiff.js"
   },
+  
   "dependencies": {
     "commander": "^12.0.0",
     "fs": "^0.0.1-security",

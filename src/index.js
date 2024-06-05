@@ -1,6 +1,16 @@
 import * as fs from 'node:fs';
 
-export const parseData = (path) => JSON.parse(fs.readFileSync(path, 'utf-8'));
+export const checkExt = (path) => {
+  if (path.endsWith('.json')) return 'json';
+  if (path.endsWith('.yaml')) return 'yaml';
+  if (path.endsWith('.yml')) return 'yaml';
+}
+
+export const parseData = (path) => {
+  return JSON.parse(fs.readFileSync(path, 'utf-8'));
+};
+
+
 
 const comp1 = (obj1, obj2, key) => (obj1[key] === obj2[key] ? obj1[key] : [obj1[key], obj2[key]]);
 const comp2 = (hasKeyInObj1, obj1, obj2, key) => (hasKeyInObj1 ? obj1[key] : obj2[key]);
