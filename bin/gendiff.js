@@ -16,7 +16,7 @@ program
     const absPath2 = path.resolve(filepath2);
     const data1 = parseData(absPath1);
     const data2 = parseData(absPath2);
-    console.log(genDiff(data1, data2));
+    genDiff(data1, data2);
   });
 
 program.parse();
