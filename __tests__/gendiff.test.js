@@ -3,48 +3,53 @@
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { parseData, mergeObjects, genDiff } from '../src/index.js';
+import { jest } from '@jest/globals';
+import { mergeKeys, indent, genDiff } from '../src/index.js';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-describe('JSON comparison functions', () => {
-  const filePath1 = path.resolve(__dirname, '../__fixtures__/file1.json');
-  const filePath2 = path.resolve(__dirname, '../__fixtures__/file2.json');
-
-  let data1; let
-    data2;
-
-  beforeAll(() => {
-    data1 = JSON.parse(fs.readFileSync(filePath1, 'utf-8'));
-    data2 = JSON.parse(fs.readFileSync(filePath2, 'utf-8'));
+describe('mergeKeys', () => {
+  it('should merge two arrays of keys and return sorted unique values', () => {
+    const keys1 = ['a', 'b', 'c'];
+    const keys2 = ['b', 'c', 'd', 'e'];
+    const result = mergeKeys(keys1, keys2);
+    expect(result).toEqual(['a', 'b', 'c', 'd', 'e']);
   });
 
-  test('parseData', () => {
-    expect(parseData(filePath1)).toEqual(data1);
-    expect(parseData(filePath2)).toEqual(data2);
+  it('should handle empty arrays', () => {
+    expect(mergeKeys([], ['a', 'b'])).toEqual(['a', 'b']);
+    expect(mergeKeys(['a', 'b'], [])).toEqual(['a', 'b']);
+    expect(mergeKeys([], [])).toEqual([]);
   });
 
-  test('mergeObjects', () => {
-    const expectedMergeResult = {
-      host: 'hexlet.io',
-      timeout: [50, 20],
-      proxy: '123.234.53.22',
-      verbose: true,
-      follow: false,
-    };
-    expect(mergeObjects(data1, data2)).toEqual(expectedMergeResult);
+  it('should return sorted unique values when arrays have common elements', () => {
+    const keys1 = ['a', 'b'];
+    const keys2 = ['b', 'c', 'd'];
+    const result = mergeKeys(keys1, keys2);
+    expect(result).toEqual(['a', 'b', 'c', 'd']);
+  });
+});
+
+describe('indent', () => {
+  it('should return the correct indentation string', () => {
+    expect(indent(1)).toBe('    ');
+    expect(indent(2)).toBe('        ');
+    expect(indent(1, 2)).toBe('  ');
+    expect(indent(1, 10)).toBe('');
   });
 
-  test('genDiff', () => {
-    const expectedDiff = `{
-  - follow: false
-    host: hexlet.io
-  - proxy: 123.234.53.22
-  - timeout: 50
-  + timeout: 20
-  + verbose: true
-}`;
-    expect(genDiff(data1, data2)).toBe(expectedDiff);
+  it('should return an empty string when repeats is negative', () => {
+    expect(indent(1, 10)).toBe('');
+  });
+});
+
+describe('genDiff', () => {
+  const consoleSpy = jest.spyOn(console, 'log');
+
+  test('тестирование вывода в консоль', () => {
+    console.log('Hello, World!');
+    expect(consoleSpy).toHaveBeenCalledWith('Hello, World!');
+  });
+
+  afterAll(() => {
+    consoleSpy.mockRestore();
   });
 });

@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 import { Command } from 'commander';
 import * as path from 'node:path';
-import { parseData, genDiff } from '../src/index.js';
+import { genDiff } from '../src/index.js';
+import { parseData } from '../src/parsers.js';
 
 const program = new Command();
 
@@ -16,7 +17,12 @@ program
     const absPath2 = path.resolve(filepath2);
     const data1 = parseData(absPath1);
     const data2 = parseData(absPath2);
+    if (data1 === null || data2 === null) {
+      console.log('wrong extension of files');
+      return false;
+    }
     genDiff(data1, data2);
+    return true;
   });
 
 program.parse();
