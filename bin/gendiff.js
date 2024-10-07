@@ -3,6 +3,7 @@ import { Command } from 'commander';
 import * as path from 'node:path';
 import { genDiff } from '../src/index.js';
 import { parseData } from '../src/parsers.js';
+import { stylish } from '../src/formater.js';
 
 const program = new Command();
 
@@ -21,7 +22,7 @@ program
       console.log('wrong extension of files');
       return false;
     }
-    genDiff(data1, data2);
+    stylish(genDiff(data1, data2));
     return true;
   });
 
