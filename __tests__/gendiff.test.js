@@ -3,8 +3,10 @@
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { mergeKeys, indent, printDiff, genDiff } from '../src/index.js';
 import { jest } from '@jest/globals';
+import {
+  mergeKeys, indent, printDiff, genDiff,
+} from '../src/index.js';
 
 describe('mergeKeys', () => {
   it('совмещает два массива и сортирует их', () => {
@@ -53,7 +55,7 @@ describe('genDiff', () => {
 
     expect(logSpy.mock.calls).toEqual([
       ['{\n'],
-      ['}\n']
+      ['}\n'],
     ]);
 
     logSpy.mockRestore();
@@ -64,12 +66,12 @@ describe('genDiff', () => {
     const obj1 = {
       a: 1,
       b: 2,
-      c: 3
+      c: 3,
     };
     const obj2 = {
       a: 1,
       b: 3,
-      d: 5
+      d: 5,
     };
 
     genDiff(obj1, obj2);
@@ -81,7 +83,7 @@ describe('genDiff', () => {
       ['  + b: 3\n'],
       ['  - c: 3\n'],
       ['  + d: 5\n'],
-      ['}\n']
+      ['}\n'],
     ]);
 
     logSpy.mockRestore();
@@ -95,12 +97,12 @@ describe('genDiff', () => {
         b1: 2,
         b2: {
           b21: {
-            b212: 5
+            b212: 5,
           },
-          b23: 5
-        }
+          b23: 5,
+        },
       },
-      c: 3
+      c: 3,
     };
     const obj2 = {
       a: 1,
@@ -108,12 +110,12 @@ describe('genDiff', () => {
         b1: 1,
         b2: {
           b21: 3,
-          b23: 4
-        }
+          b23: 4,
+        },
       },
       d: {
-        d1: 1
-      }
+        d1: 1,
+      },
     };
 
     genDiff(obj1, obj2);
@@ -137,7 +139,7 @@ describe('genDiff', () => {
       ['  + d: {\n'],
       ['      d1: 1\n'],
       ['    }\n'],
-      ['}\n']
+      ['}\n'],
     ]);
 
     logSpy.mockRestore();

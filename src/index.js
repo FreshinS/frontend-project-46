@@ -9,7 +9,7 @@ export const genDiff = (data1, data2) => {
   const diff = {
     added: {},
     removed: {},
-    common: {}
+    common: {},
   };
   const keys1 = Object.keys(data1);
   const keys2 = Object.keys(data2);
@@ -31,4 +31,4 @@ export const genDiff = (data1, data2) => {
     }
   });
   return diff;
-}
+};
