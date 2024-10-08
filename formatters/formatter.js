@@ -55,13 +55,9 @@ export const stylish = (diff, it = 1) => {
     // console.log('[debug]', key);
     if (Object.keys(diff.common).includes(key)) {
       if (_.isObject(diff.common[key])) {
-        if (isDiffObject(diff.common[key])) {
           console.log(printDiff(key, '{', ' ', it));
           stylish(diff.common[key], it + 1);
           console.log(`${indent(it)}}`);
-        } else {
-          console.log(printDiff(key, diff.common[key], ' ', it));
-        }
       } else {
         console.log(printDiff(key, diff.common[key], ' ', it));
       }
@@ -83,3 +79,28 @@ export const stylish = (diff, it = 1) => {
   });
   if (it === 1) console.log('}');
 };
+
+const findPath = (diff, obj) => {
+  
+}
+
+export const plain = (diff, path = '') => {
+  const keys = [...new Set([...Object.keys(diff.added), ...Object.keys(diff.removed), ...Object.keys(diff.common)])].sort();
+  keys.forEach((key) => {
+    if (Object.keys(diff.added).includes(key) && Object.keys(diff.removed).includes(key)) {
+      console.log(`Property '${path}${path.length === 0 ? '' : '.'}${key}' was updated. From '${diff.removed[key]}' to '${diff.added[key]}'`);
+    } else {
+      if (Object.keys(diff.common).includes(key)) {
+        if (_.isObject(diff.common[key])) {
+          plain(diff.common[key], path.length === 0 ? key : `${path}.${key}`);
+        }
+      }
+      if (Object.keys(diff.removed).includes(key)) {
+        console.log(`Property '${path}${path.length === 0 ? '' : '.'}${key}' was removed`);
+      }
+      if (Object.keys(diff.added).includes(key)) {
+        console.log(`Property '${path}${path.length === 0 ? '' : '.'}${key}' was added with value: '${diff.added[key]}'`);
+      }
+    }
+  });
+}
