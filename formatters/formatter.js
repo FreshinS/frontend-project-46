@@ -80,15 +80,29 @@ export const stylish = (diff, it = 1) => {
   if (it === 1) console.log('}');
 };
 
-const findPath = (diff, obj) => {
-  
+const complexValue = (value) => {
+  if (_.isObject(value)) {
+    return `[complex value]`;
+  }
+  else if (typeof value === 'string') {
+    return `'${value}'`
+  } else {
+    return `${value}`
+  }
 }
+
 
 export const plain = (diff, path = '') => {
   const keys = [...new Set([...Object.keys(diff.added), ...Object.keys(diff.removed), ...Object.keys(diff.common)])].sort();
+  let removed;
+  let added;
+  let fullPath;
   keys.forEach((key) => {
     if (Object.keys(diff.added).includes(key) && Object.keys(diff.removed).includes(key)) {
-      console.log(`Property '${path}${path.length === 0 ? '' : '.'}${key}' was updated. From '${diff.removed[key]}' to '${diff.added[key]}'`);
+      fullPath = `${path}${path.length === 0 ? '' : '.'}${key}`
+      removed = complexValue(diff.removed[key]);
+      added = complexValue(diff.added[key]);
+      console.log(`Property '${fullPath}' was updated. From ${removed} to ${added}`);
     } else {
       if (Object.keys(diff.common).includes(key)) {
         if (_.isObject(diff.common[key])) {
@@ -96,10 +110,13 @@ export const plain = (diff, path = '') => {
         }
       }
       if (Object.keys(diff.removed).includes(key)) {
-        console.log(`Property '${path}${path.length === 0 ? '' : '.'}${key}' was removed`);
+        fullPath = `${path}${path.length === 0 ? '' : '.'}${key}`
+        console.log(`Property '${fullPath}' was removed`);
       }
       if (Object.keys(diff.added).includes(key)) {
-        console.log(`Property '${path}${path.length === 0 ? '' : '.'}${key}' was added with value: '${diff.added[key]}'`);
+        fullPath = `${path}${path.length === 0 ? '' : '.'}${key}`
+        added = complexValue(diff.added[key]);
+        console.log(`Property '${fullPath}' was added with value: ${added}`);
       }
     }
   });
