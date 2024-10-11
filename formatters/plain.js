@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { mergeDiffKeys } from '../src/utils.js';
+import { mergeDiffKeys } from '../src/.js';
 
 const complexValue = (value) => {
   if (_.isObject(value)) {
@@ -13,9 +13,7 @@ const complexValue = (value) => {
 
 export const plain = (diff, path = '') => {
   const keys = mergeDiffKeys(diff);
-  let removed;
-  let added;
-  let fullPath;
+  let removed, added, fullPath;
   keys.forEach((key) => {
     if (Object.keys(diff.added).includes(key) && Object.keys(diff.removed).includes(key)) {
       fullPath = `${path}${path.length === 0 ? '' : '.'}${key}`;
