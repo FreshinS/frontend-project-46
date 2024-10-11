@@ -1,12 +1,40 @@
 // @ts-check
 
-import * as fs from 'node:fs';
-import * as path from 'node:path';
+// import { jest } from '@jest/globals';
+import { describe } from '@jest/globals';
+import { execSync } from 'child_process';
 import { fileURLToPath } from 'node:url';
-import { jest } from '@jest/globals';
+import path from 'node:path';
+import json from '../src/formatters/json.js';
 import {
-  mergeKeys, indent, printDiff, genDiff,
-} from '../src/index.js';
+  mergeKeys, indent, mergeDiffKeys, createDiff,
+} from '../src/utils.js';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+const options = { encoding: 'utf8', cwd: path.join(__dirname, '..') };
+const result1 = execSync(
+  'bin/gendiff.js --format stylish __fixtures__/file1.json __fixtures__/file2.json',
+  // @ts-ignore
+  options,
+);
+
+const result2 = execSync(
+  'bin/gendiff.js --format plain __fixtures__/file1.json __fixtures__/file2.json',
+  // @ts-ignore
+  options,
+);
+
+const result3 = execSync(
+  'bin/gendiff.js --format json __fixtures__/file1.json __fixtures__/file2.json',
+  // @ts-ignore
+  options,
+);
+
+const rows1 = result1.trim().split('\n');
+const rows2 = result2.trim().split('\n');
+const rows3 = result3.trim().split('\n');
 
 describe('mergeKeys', () => {
   it('совмещает два массива и сортирует их', () => {
@@ -44,104 +72,84 @@ describe('indent', () => {
   });
 });
 
-describe('genDiff', () => {
-  it('работает с пустыми файлами', () => {
-    const logSpy = jest.spyOn(process.stdout, 'write').mockImplementation();
-
-    const obj1 = {};
-    const obj2 = {};
-
-    genDiff(obj1, obj2);
-
-    expect(logSpy.mock.calls).toEqual([
-      ['{\n'],
-      ['}\n'],
-    ]);
-
-    logSpy.mockRestore();
+describe('mergeDiffKeys', () => {
+  it('совмещает три ключа объекта и сортирует их', () => {
+    const obj = {
+      added: {
+        a: 1,
+        b: 2,
+      },
+      removed: {
+        b: 3,
+        c: 4,
+      },
+      common: {
+        d: 5,
+      },
+    };
+    expect(mergeDiffKeys(obj)).toEqual(['a', 'b', 'c', 'd']);
   });
-  it('работает с простыми объектами', () => {
-    const logSpy = jest.spyOn(process.stdout, 'write').mockImplementation();
+});
 
+describe('createDiff', () => {
+  it('вычисляет отличия двух объектов и выводит их в новый объект', () => {
     const obj1 = {
-      a: 1,
-      b: 2,
-      c: 3,
+      b: false,
+      c: {
+        d: 'fff',
+        e: {
+          f: 4,
+          g: null,
+        },
+      },
+      h: '',
     };
     const obj2 = {
-      a: 1,
-      b: 3,
-      d: 5,
+      a: 2,
+      b: false,
+      c: {
+        d: 'fff',
+        e: {
+          f: 2,
+        },
+      },
+      h: 'yay',
     };
-
-    genDiff(obj1, obj2);
-
-    expect(logSpy.mock.calls).toEqual([
-      ['{\n'],
-      ['    a: 1\n'],
-      ['  - b: 2\n'],
-      ['  + b: 3\n'],
-      ['  - c: 3\n'],
-      ['  + d: 5\n'],
-      ['}\n'],
-    ]);
-
-    logSpy.mockRestore();
-  });
-  it('работает с вложенными объектами', () => {
-    const logSpy = jest.spyOn(process.stdout, 'write').mockImplementation();
-
-    const obj1 = {
-      a: 1,
-      b: {
-        b1: 2,
-        b2: {
-          b21: {
-            b212: 5,
+    const result = {
+      added: {
+        a: 2,
+        h: 'yay',
+      },
+      removed: {
+        h: '',
+      },
+      common: {
+        b: false,
+        c: {
+          added: {},
+          removed: {},
+          common: {
+            d: 'fff',
+            e: {
+              added: {
+                f: 2,
+              },
+              removed: {
+                f: 4,
+                g: null,
+              },
+              common: {},
+            },
           },
-          b23: 5,
         },
       },
-      c: 3,
     };
-    const obj2 = {
-      a: 1,
-      b: {
-        b1: 1,
-        b2: {
-          b21: 3,
-          b23: 4,
-        },
-      },
-      d: {
-        d1: 1,
-      },
-    };
+    expect(createDiff(obj1, obj2)).toEqual(result);
+  });
+});
 
-    genDiff(obj1, obj2);
-
-    expect(logSpy.mock.calls).toEqual([
-      ['{\n'],
-      ['    a: 1\n'],
-      ['    b: {\n'],
-      ['      - b1: 2\n'],
-      ['      + b1: 1\n'],
-      ['        b2: {\n'],
-      ['          - b21: {\n'],
-      ['                b212: 5\n'],
-      ['            }\n'],
-      ['          + b21: 3\n'],
-      ['          - b23: 5\n'],
-      ['          + b23: 4\n'],
-      ['        }\n'],
-      ['    }\n'],
-      ['  - c: 3\n'],
-      ['  + d: {\n'],
-      ['      d1: 1\n'],
-      ['    }\n'],
-      ['}\n'],
-    ]);
-
-    logSpy.mockRestore();
+describe('stylish', () => {
+  it('выводит отличия в JSON формате', () => {
+    expect(rows1[0]).toStrictEqual('{');
   });
 });

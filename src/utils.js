@@ -1,3 +1,5 @@
+import _ from 'lodash';
+
 export const indent = (it, left = 0, i = 4) => {
   const repeats = it * i - left;
   if (repeats < 0) {
@@ -14,4 +16,30 @@ export const mergeKeys = (keys1, keys2) => {
 export const mergeDiffKeys = (diff) => {
   const merged = [...new Set(Object.keys({ ...diff.added, ...diff.removed, ...diff.common }))];
   return merged.sort();
+};
+
+export const createDiff = (data1, data2) => {
+  const diff = {
+    added: {},
+    removed: {},
+    common: {},
+  };
+  const keys1 = Object.keys(data1);
+  const keys2 = Object.keys(data2);
+  const mergedKeys = mergeKeys(keys1, keys2);
+  mergedKeys.forEach((key) => {
+    if (keys1.includes(key) && keys2.includes(key)) {
+      if (_.isObject(data1[key]) && _.isObject(data2[key])) {
+        diff.common[key] = createDiff(data1[key], data2[key]);
+      } else if (data1[key] === data2[key]) {
+        diff.common[key] = data1[key];
+      } else {
+        diff.removed[key] = data1[key];
+        diff.added[key] = data2[key];
+      }
+    } else if (keys1.includes(key)) {
+      diff.removed[key] = data1[key];
+    } else diff.added[key] = data2[key];
+  });
+  return diff;
 };

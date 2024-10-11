@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { mergeDiffKeys, indent } from '../src/utils.js';
+import { mergeDiffKeys, indent } from '../utils.js';
 
 export const printDiff = (key, value, sign, it) => {
   if (_.isObject(value)) {
