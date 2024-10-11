@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { mergeDiffKeys } from '../src/index.js';
+import { mergeDiffKeys } from '../src/utils.js';
 
 const complexValue = (value) => {
   if (_.isObject(value)) {

@@ -1,6 +1,5 @@
 import _ from 'lodash';
-import { mergeDiffKeys } from '../src/index.js';
-import { indent } from '../src/index.js';
+import { mergeDiffKeys, indent } from '../src/utils.js';
 
 export const printDiff = (key, value, sign, it) => {
   if (_.isObject(value)) {
@@ -48,7 +47,7 @@ const printIfObject = (obj, key, sign, it) => {
   } else {
     console.log(printDiff(key, obj[key], sign, it));
   }
-}
+};
 
 export const stylish = (diff, it = 1) => {
   if (it === 1) console.log('{');
@@ -64,10 +63,10 @@ export const stylish = (diff, it = 1) => {
       }
     }
     if (Object.keys(diff.removed).includes(key)) {
-      printIfObject(diff.removed, key, '-', it)
+      printIfObject(diff.removed, key, '-', it);
     }
     if (Object.keys(diff.added).includes(key)) {
-      printIfObject(diff.added, key, '+', it)
+      printIfObject(diff.added, key, '+', it);
     }
   });
   if (it === 1) console.log('}');

@@ -3,24 +3,7 @@ import { parseData } from './parsers.js';
 import { stylish } from '../formatters/stylish.js';
 import { plain } from '../formatters/plain.js';
 import json from '../formatters/json.js';
-
-export const indent = (it, left = 0, i = 4) => {
-  const repeats = it * i - left;
-  if (repeats < 0) {
-    return '';
-  }
-  return ' '.repeat(repeats);
-};
-
-export const mergeKeys = (keys1, keys2) => {
-  const merged = [...new Set([...keys1, ...keys2])];
-  return merged.sort();
-};
-
-export const mergeDiffKeys = (diff) => {
-  const merged = [...new Set(Object.keys({ ...diff.added, ...diff.removed, ...diff.common }))];
-  return merged.sort();
-};
+import { mergeKeys } from './utils.js';
 
 export const createDiff = (data1, data2) => {
   const diff = {
