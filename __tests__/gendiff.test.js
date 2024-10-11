@@ -16,19 +16,19 @@ const __dirname = path.dirname(__filename);
 
 const options = { encoding: 'utf8', cwd: path.join(__dirname, '..') };
 const result1 = execSync(
-  'gendiff --format stylish __fixtures__/file1.json __fixtures__/file2.json',
+  'bin/gendiff.js --format stylish __fixtures__/file1.json __fixtures__/file2.json',
   // @ts-ignore
   options,
 );
 
 const result2 = execSync(
-  'gendiff --format plain __fixtures__/file1.json __fixtures__/file2.json',
+  'bin/gendiff.js --format plain __fixtures__/file1.json __fixtures__/file2.json',
   // @ts-ignore
   options,
 );
 
 const result3 = execSync(
-  'gendiff --format json __fixtures__/file1.json __fixtures__/file2.json',
+  'bin/gendiff.js --format json __fixtures__/file1.json __fixtures__/file2.json',
   // @ts-ignore
   options,
 );
