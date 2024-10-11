@@ -4,16 +4,14 @@ import { mergeDiffKeys, indent } from '../utils.js';
 export const printDiff = (key, value, sign, it) => {
   if (_.isObject(value)) {
     const keys = Object.keys(value);
-    let result = `${indent(it, 2)}${sign} ${key}: {\n`;
-    keys.forEach((key1) => {
-      if (_.isObject(value[key1])) {
-        result += printDiff(key1, value[key], ' ', it + 1);
-      } else {
-        result += `${indent(it + 1, 2)}  ${key1}: ${value[key1]}`;
-      }
-    });
-    result += `\n${indent(it)}}`;
-    return result;
+    return `${indent(it, 2)}${sign} ${key}: {\n${
+      keys.map((key1) => {
+        if (_.isObject(value[key1])) {
+          return printDiff(key1, value[key], ' ', it + 1);
+        }
+        return `${indent(it + 1, 2)}  ${key1}: ${value[key1]}`;
+      }).join('')
+    }\n${indent(it)}}`;
   }
   return `${indent(it, 2)}${sign} ${key}: ${value}`;
 };
@@ -29,16 +27,12 @@ export const isDiffObject = (obj) => {
 
 export const printObjDeep = (obj, it = 0) => {
   const keys = Object.keys(obj);
-  let result = '';
-  keys.forEach((key) => {
+  return keys.map((key) => {
     if (_.isObject(obj[key])) {
-      result += `${indent(it)}${key}: {\n${printObjDeep(obj[key], it + 1)}${indent(it)}}`;
-    } else {
-      result += `${indent(it)}${key}: ${obj[key]}`;
+      return `${indent(it)}${key}: {\n${printObjDeep(obj[key], it + 1)}${indent(it)}}\n`;
     }
-    result += '\n';
-  });
-  return result;
+    return `${indent(it)}${key}: ${obj[key]}\n`;
+  }).join('');
 };
 
 const printIfObject = (obj, key, sign, it) => {
