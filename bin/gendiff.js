@@ -3,7 +3,9 @@ import { Command } from 'commander';
 import * as path from 'node:path';
 import { genDiff } from '../src/index.js';
 import { parseData } from '../src/parsers.js';
-import { stylish, plain } from '../formatters/formatter.js';
+import { stylish } from '../formatters/stylish.js';
+import { plain } from '../formatters/plain.js';
+import json from '../formatters/json.js';
 
 const program = new Command();
 
@@ -23,9 +25,9 @@ program
       return false;
     }
     const diff = genDiff(data1, data2);
-    // console.log(diff);
+    json(diff);
     // stylish(diff);
-    plain(diff);
+    //plain(diff);
     return true;
   });
 
