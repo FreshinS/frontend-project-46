@@ -50,14 +50,14 @@ export const printObjDeep = (obj, it = 0) => {
 
 export const stylish = (diff, it = 1) => {
   if (it === 1) console.log('{');
-  const keys = [...new Set([...Object.keys(diff.added), ...Object.keys(diff.removed), ...Object.keys(diff.common)])].sort();
+  const keys = [...new Set(Object.keys({ ...diff.added, ...diff.removed, ...diff.common }))].sort();
   keys.forEach((key) => {
     // console.log('[debug]', key);
     if (Object.keys(diff.common).includes(key)) {
       if (_.isObject(diff.common[key])) {
-          console.log(printDiff(key, '{', ' ', it));
-          stylish(diff.common[key], it + 1);
-          console.log(`${indent(it)}}`);
+        console.log(printDiff(key, '{', ' ', it));
+        stylish(diff.common[key], it + 1);
+        console.log(`${indent(it)}}`);
       } else {
         console.log(printDiff(key, diff.common[key], ' ', it));
       }

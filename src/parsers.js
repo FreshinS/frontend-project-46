@@ -1,15 +1,17 @@
 import * as fs from 'node:fs';
 import yaml from 'js-yaml';
+import * as path from 'node:path';
 
-export const parseJSONData = (path) => JSON.parse(fs.readFileSync(path, 'utf-8'));
+export const parseJSONData = (pathToFile) => JSON.parse(fs.readFileSync(pathToFile, 'utf-8'));
 
-export const parseYAMLData = (path) => yaml.load(fs.readFileSync(path, 'utf-8'));
+export const parseYAMLData = (pathToFile) => yaml.load(fs.readFileSync(pathToFile, 'utf-8'));
 
-export const parseData = (path) => {
-  if (path.includes('.json')) {
-    return parseJSONData(path);
-  } if (path.includes('.yml') || path.includes('.yaml')) {
-    return parseYAMLData(path);
+export const parseData = (pathToFile) => {
+  const absPath = path.resolve(pathToFile);
+  if (absPath.includes('.json')) {
+    return parseJSONData(absPath);
+  } if (absPath.includes('.yml') || absPath.includes('.yaml')) {
+    return parseYAMLData(absPath);
   }
   return null;
 };
