@@ -1,4 +1,5 @@
 import _ from 'lodash';
+import { mergeDiffKeys } from '../src/index.js';
 
 const complexValue = (value) => {
   if (_.isObject(value)) {
@@ -11,7 +12,7 @@ const complexValue = (value) => {
 };
 
 export const plain = (diff, path = '') => {
-  const keys = [...new Set(Object.keys({ ...diff.added, ...diff.removed, ...diff.common }))].sort();
+  const keys = mergeDiffKeys(diff);
   let removed;
   let added;
   let fullPath;

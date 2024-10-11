@@ -1,12 +1,6 @@
 import _ from 'lodash';
-
-export const indent = (it, left = 0, i = 4) => {
-  const repeats = it * i - left;
-  if (repeats < 0) {
-    return '';
-  }
-  return ' '.repeat(repeats);
-};
+import { mergeDiffKeys } from '../src/index.js';
+import { indent } from '../src/index.js';
 
 export const printDiff = (key, value, sign, it) => {
   if (_.isObject(value)) {
@@ -48,11 +42,18 @@ export const printObjDeep = (obj, it = 0) => {
   return result;
 };
 
+const printIfObject = (obj, key, sign, it) => {
+  if (_.isObject(obj[key])) {
+    console.log(`${indent(it, 2)}${sign} ${key}: {\n${printObjDeep(obj[key], it + 1)}${indent(it)}}`);
+  } else {
+    console.log(printDiff(key, obj[key], sign, it));
+  }
+}
+
 export const stylish = (diff, it = 1) => {
   if (it === 1) console.log('{');
-  const keys = [...new Set(Object.keys({ ...diff.added, ...diff.removed, ...diff.common }))].sort();
+  const keys = mergeDiffKeys(diff);
   keys.forEach((key) => {
-    // console.log('[debug]', key);
     if (Object.keys(diff.common).includes(key)) {
       if (_.isObject(diff.common[key])) {
         console.log(printDiff(key, '{', ' ', it));
@@ -63,18 +64,10 @@ export const stylish = (diff, it = 1) => {
       }
     }
     if (Object.keys(diff.removed).includes(key)) {
-      if (_.isObject(diff.removed[key])) {
-        console.log(`${indent(it, 2)}- ${key}: {\n${printObjDeep(diff.removed[key], it + 1)}${indent(it)}}`);
-      } else {
-        console.log(printDiff(key, diff.removed[key], '-', it));
-      }
+      printIfObject(diff.removed, key, '-', it)
     }
     if (Object.keys(diff.added).includes(key)) {
-      if (_.isObject(diff.added[key])) {
-        console.log(`${indent(it, 2)}+ ${key}: {\n${printObjDeep(diff.added[key], it + 1)}${indent(it)}}`);
-      } else {
-        console.log(printDiff(key, diff.added[key], '+', it));
-      }
+      printIfObject(diff.added, key, '+', it)
     }
   });
   if (it === 1) console.log('}');
