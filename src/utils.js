@@ -22,19 +22,19 @@ export const createDiff = (data1, data2) => {
   const keys1 = Object.keys(data1);
   const keys2 = Object.keys(data2);
   const mergedKeys = mergeKeys(keys1, keys2);
-  return mergedKeys.reduce((diff, key) => {
+  return mergedKeys.reduce((acc, key) => {
     if (keys1.includes(key) && keys2.includes(key)) {
       if (_.isObject(data1[key]) && _.isObject(data2[key])) {
-        diff.common[key] = createDiff(data1[key], data2[key]);
+        acc.common[key] = createDiff(data1[key], data2[key]);
       } else if (data1[key] === data2[key]) {
-        diff.common[key] = data1[key];
+        acc.common[key] = data1[key];
       } else {
-        diff.removed[key] = data1[key];
-        diff.added[key] = data2[key];
+        acc.removed[key] = data1[key];
+        acc.added[key] = data2[key];
       }
     } else if (keys1.includes(key)) {
-      diff.removed[key] = data1[key];
-    } else diff.added[key] = data2[key];
-    return diff;
-  }, {added: {}, removed: {}, common: {}});
+      acc.removed[key] = data1[key];
+    } else acc.added[key] = data2[key];
+    return acc;
+  }, { added: {}, removed: {}, common: {} });
 };

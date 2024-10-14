@@ -35,28 +35,21 @@ export const printObjDeep = (obj, it = 0) => {
   }).join('');
 };
 
-const printIfObject = (obj, key, sign, it) => {
-  return _.isObject(obj[key])
-    ? `${indent(it, 2)}${sign} ${key}: {\n${printObjDeep(obj[key], it + 1)}${indent(it)}}`
-    : printDiff(key, obj[key], sign, it);
-};
+const printIfObject = (obj, key, sign, it) => (_.isObject(obj[key])
+  ? `${indent(it, 2)}${sign} ${key}: {\n${printObjDeep(obj[key], it + 1)}${indent(it)}}`
+  : printDiff(key, obj[key], sign, it));
 
-export const stylish = (diff, it = 1) => {
-  const initialResult = it === 1 ? '{\n' : '';
-  const keys = mergeDiffKeys(diff);
-  
-  return keys.reduce((result, key) => {
-    if (Object.keys(diff.common).includes(key)) {
-      result += _.isObject(diff.common[key])
-        ? `${printDiff(key, '{', ' ', it)}\n${stylish(diff.common[key], it + 1)}${indent(it)}}\n`
-        : `${printDiff(key, diff.common[key], ' ', it)}\n`;
-    }
-    if (Object.keys(diff.removed).includes(key)) {
-      result += `${printIfObject(diff.removed, key, '-', it)}\n`;
-    }
-    if (Object.keys(diff.added).includes(key)) {
-      result += `${printIfObject(diff.added, key, '+', it)}\n`;
-    }
-    return result;
-  }, initialResult) + (it === 1 ? '}' : '');
-};
+export const stylish = (diff, it = 1) => mergeDiffKeys(diff).reduce((accumulator, key) => (
+  accumulator
+      + ((Object.keys(diff.common).includes(key)
+          && (_.isObject(diff.common[key])
+            ? `${printDiff(key, '{', ' ', it)}\n${stylish(diff.common[key], it + 1)}${indent(it)}}\n`
+            : `${printDiff(key, diff.common[key], ' ', it)}\n`
+          )) || '')
+      + (Object.keys(diff.removed).includes(key)
+        ? `${printIfObject(diff.removed, key, '-', it)}\n`
+        : '')
+      + (Object.keys(diff.added).includes(key)
+        ? `${printIfObject(diff.added, key, '+', it)}\n`
+        : '')
+), it === 1 ? '{\n' : '') + (it === 1 ? '}' : '');
