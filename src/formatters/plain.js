@@ -12,25 +12,27 @@ const complexValue = (value) => {
 };
 
 export const plain = (diff, path = '') => {
+  const result = [];
   const keys = mergeDiffKeys(diff);
   keys.forEach((key) => {
     const currentPath = `${path}${path.length === 0 ? '' : '.'}${key}`;
     if (Object.keys(diff.added).includes(key) && Object.keys(diff.removed).includes(key)) {
-      console.log(
-        `Property '${currentPath}' was updated. From ${complexValue(diff.removed[key])} to ${complexValue(diff.added[key])}`,
+      result.push(
+        `Property '${currentPath}' was updated. From ${complexValue(diff.removed[key])} to ${complexValue(diff.added[key])}\n`,
       );
     } else {
       if (Object.keys(diff.common).includes(key) && _.isObject(diff.common[key])) {
-        plain(diff.common[key], currentPath);
+        result.push(plain(diff.common[key], currentPath));
       }
       if (Object.keys(diff.removed).includes(key)) {
-        console.log(`Property '${currentPath}' was removed`);
+        result.push(`Property '${currentPath}' was removed\n`);
       }
       if (Object.keys(diff.added).includes(key)) {
-        console.log(`Property '${currentPath}' was added with value: ${complexValue(diff.added[key])}`);
+        result.push(`Property '${currentPath}' was added with value: ${complexValue(diff.added[key])}\n`);
       }
     }
   });
+  return ''.concat(...result);
 };
 
 export default plain;

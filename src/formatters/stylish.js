@@ -36,32 +36,36 @@ export const printObjDeep = (obj, it = 0) => {
 };
 
 const printIfObject = (obj, key, sign, it) => {
+  const result = [];
   if (_.isObject(obj[key])) {
-    console.log(`${indent(it, 2)}${sign} ${key}: {\n${printObjDeep(obj[key], it + 1)}${indent(it)}}`);
+    result.push(`${indent(it, 2)}${sign} ${key}: {\n${printObjDeep(obj[key], it + 1)}${indent(it)}}`);
   } else {
-    console.log(printDiff(key, obj[key], sign, it));
+    result.push(printDiff(key, obj[key], sign, it));
   }
+  return ''.concat(...result);
 };
 
 export const stylish = (diff, it = 1) => {
-  if (it === 1) console.log('{');
+  const result = [];
+  if (it === 1) result.push('{\n');
   const keys = mergeDiffKeys(diff);
   keys.forEach((key) => {
     if (Object.keys(diff.common).includes(key)) {
       if (_.isObject(diff.common[key])) {
-        console.log(printDiff(key, '{', ' ', it));
-        stylish(diff.common[key], it + 1);
-        console.log(`${indent(it)}}`);
+        result.push(`${printDiff(key, '{', ' ', it)}\n`);
+        result.push(`${stylish(diff.common[key], it + 1)}`);
+        result.push(`${indent(it)}}\n`);
       } else {
-        console.log(printDiff(key, diff.common[key], ' ', it));
+        result.push(`${printDiff(key, diff.common[key], ' ', it)}\n`);
       }
     }
     if (Object.keys(diff.removed).includes(key)) {
-      printIfObject(diff.removed, key, '-', it);
+      result.push(`${printIfObject(diff.removed, key, '-', it)}\n`);
     }
     if (Object.keys(diff.added).includes(key)) {
-      printIfObject(diff.added, key, '+', it);
+      result.push(`${printIfObject(diff.added, key, '+', it)}\n`);
     }
   });
-  if (it === 1) console.log('}');
+  if (it === 1) result.push('}');
+  return ''.concat(...result);
 };

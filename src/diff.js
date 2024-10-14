@@ -8,8 +8,7 @@ const genDiff = (filepath1, filepath2, formatter) => {
     console.log('wrong extension of files');
     return false;
   }
-  format(data1, data2, formatter);
-  return true;
+  return format(data1, data2, formatter);
 };
 
 export default genDiff;

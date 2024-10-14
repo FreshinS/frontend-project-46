@@ -7,14 +7,11 @@ const format = (data1, data2, formatter) => {
   const diff = createDiff(data1, data2);
   switch (formatter) {
     case 'json':
-      json(diff);
-      break;
+      return json(diff);
     case 'plain':
-      plain(diff);
-      break;
+      return plain(diff).trim();
     default:
-      stylish(diff);
-      break;
+      return stylish(diff);
   }
 };
 

@@ -151,13 +151,13 @@ describe('createDiff', () => {
 
 describe('genDiff', () => {
   it('Выводит false в случае неправильного расширения файла', () => {
-    const diff1 = genDiff('__fixtures__/file1.json', '__fixtures__/file1.json', 'stylish');
+    const diff1 = genDiff('__fixtures__/file1.json', '__fixtures__/file2.json', 'stylish');
     expect(diff1).toBeTruthy();
-    const diff2 = genDiff('__fixtures__/file1.yml', '__fixtures__/file1.yml', 'json');
+    const diff2 = genDiff('__fixtures__/file1.yml', '__fixtures__/file2.yml', 'json');
     expect(diff2).toBeTruthy();
-    const diff3 = genDiff('__fixtures__/file1.csgo', '__fixtures__/file1.csgo', 'plain');
+    const diff3 = genDiff('__fixtures__/file1.csgo', '__fixtures__/file2.csgo', 'plain');
     expect(diff3).toBeFalsy();
-    const diff4 = genDiff('__fixtures__/file1.json', '__fixtures__/file1.json', 'plain');
+    const diff4 = genDiff('__fixtures__/file1.json', '__fixtures__/file2.json', 'plain');
     expect(diff4).toBeTruthy();
   });
 });
@@ -289,7 +289,7 @@ describe('parseData', () => {
 });
 
 describe('formatter stylish', () => {
-  it('выводит отличия в JSON формате', () => {
+  it('выводит отличия в stylish формате', () => {
     expect(rows1[0]).toStrictEqual('{');
     expect(rows1[1]).toStrictEqual('    common: {');
     expect(rows1[2]).toStrictEqual('      + follow: false');
@@ -338,7 +338,7 @@ describe('formatter stylish', () => {
 });
 
 describe('formatter plain', () => {
-  it('выводит отличия в JSON формате', () => {
+  it('выводит отличия в plain формате', () => {
     expect(rows2[0]).toStrictEqual("Property 'common.follow' was added with value: false");
     expect(rows2[1]).toStrictEqual("Property 'common.setting2' was removed");
     expect(rows2[2]).toStrictEqual("Property 'common.setting3' was updated. From true to null");
